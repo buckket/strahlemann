@@ -8,7 +8,7 @@ func ExtractTweet(text string) (tweet string, newPos int) {
 	}
 
 	for pos, rune := range text {
-		if rune == '.' {
+		if rune == '.' || rune == '!' || rune == '?' {
 			if pos <= 280 {
 				newPos = pos + 1
 			} else if pos > 280 {

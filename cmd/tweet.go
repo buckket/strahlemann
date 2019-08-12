@@ -68,7 +68,11 @@ func postTweet(cmd *cobra.Command, args []string) {
 	}
 	tweet, err := tapi.PostTweet(tweetText, v)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
+		tweet, err = tapi.PostTweet(tweetText, url.Values{})
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	post.LastTweet = tweet.Id
