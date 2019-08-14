@@ -18,9 +18,9 @@ func ExtractTweet(text string) (tweet string, newPos int) {
 	}
 
 	if newPos == 0 {
-		return text[:280], 281
+		return text[:280], 280
 	} else {
-		return text[:newPos], newPos + 1
+		return text[:newPos], newPos
 	}
 }
 
