@@ -20,12 +20,14 @@ type Post struct {
 }
 
 type Status struct {
-	AllEntries      int
-	DoneEntries     int
-	LastTweet       int64
-	CurrentPosition int
-	CurrentLenght   int
-	NextTweet       string
+	AllEntries        int
+	AllEntriesLength  int
+	DoneEntries       int
+	DoneEntiresLength int
+	LastTweet         int64
+	CurrentPosition   int
+	CurrentLenght     int
+	NextTweet         string
 }
 
 func (db *StrahlemannDatabase) CreateSchema() error {
@@ -97,14 +99,14 @@ func (db *StrahlemannDatabase) GetNextPost() (*Post, error) {
 func (db *StrahlemannDatabase) GetStatus() (*Status, error) {
 	status := Status{}
 
-	qry := `SELECT COUNT(*) FROM blog`
-	err := db.QueryRow(qry).Scan(&status.AllEntries)
+	qry := `SELECT COUNT(*), COALESCE(SUM(LENGTH(content)), 0) FROM blog`
+	err := db.QueryRow(qry).Scan(&status.AllEntries, &status.AllEntriesLength)
 	if err != nil {
 		return nil, err
 	}
 
-	qry = `SELECT COUNT(*) FROM blog WHERE complete = TRUE`
-	err = db.QueryRow(qry).Scan(&status.DoneEntries)
+	qry = `SELECT COUNT(*), COALESCE(SUM(LENGTH(content)), 0) FROM blog WHERE complete = TRUE`
+	err = db.QueryRow(qry).Scan(&status.DoneEntries, &status.DoneEntiresLength)
 	if err != nil {
 		return nil, err
 	}
