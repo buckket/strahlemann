@@ -2,25 +2,29 @@ package utils
 
 import "fmt"
 
-func ExtractTweet(text string) (tweet string, newPos int) {
+func ExtractTweet(text string) (string, int) {
 	if len(text) <= 280 {
 		return text, 0
 	}
 
+	var lastPunctuation, lastWhitespace int
 	for pos, rune := range text {
+		if pos > 280 {
+			break
+		}
 		if rune == '.' || rune == '!' || rune == '?' {
-			if pos <= 280 {
-				newPos = pos + 1
-			} else if pos > 280 {
-				break
-			}
+			lastPunctuation = pos + 1
+		} else if rune == ' ' {
+			lastWhitespace = pos + 1
 		}
 	}
 
-	if newPos == 0 {
-		return text[:280], 280
+	if lastPunctuation > 0 {
+		return text[:lastPunctuation], lastPunctuation
+	} else if lastWhitespace > 0 {
+		return text[:lastWhitespace], lastWhitespace
 	} else {
-		return text[:newPos], newPos
+		return text[:280], 280
 	}
 }
 
